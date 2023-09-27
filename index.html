@@ -6,6 +6,22 @@
     <title>KIP</title>
 </head>
 <style>
+    div#bodyTables {
+        width: 410px; 
+        overflow-x: scroll;
+        -ms-overflow-style: none;  /* IE и Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+
+    div#bodyTables::-webkit-scrollbar {
+        display: none;
+    }
+
+    div#bodyComputer {
+        width: 1185px;
+        overflow-x: auto;
+    }
+
     .table {
         font-family: Arial, Helvetica, sans-serif;
         border-collapse: collapse;
@@ -30,7 +46,7 @@
 
     .table tr:nth-child(even){background-color: #f2f2f2;}
 </style>
-<body>
+<body onload="sizeTables()">
     <br>
     <input type="button" style="margin-right: 12px; font-size: 18px; 
         padding: 6px 18px; 
@@ -49,6 +65,8 @@
             <option>Podstawowe Koszty</option>
             <option>Podwyższone Koszty</option>
         </select>
+        <br>
+        <br>
         <select id="selPIT2" style="font-size: 18px; cursor: pointer; padding: 6px 12px;">
             <option>Złożył PIT2</option>
             <option>Nie złożył PIT2</option>
@@ -56,24 +74,24 @@
     </div>
     <br>
     <br>
-    <div style="font-size: 18px;">
+    <div style="font-size: 18px; border: 3px solid black;">
         <table class="table">
             <tr>
-                <th>Miesiąc</th>
-                <th>Przychód ogółem<br>(w zł)</th>
-                <th>Przychód ogółem narastająco<br>(w zł)</th>
-                <th>Składki na ubezpieczenia społeczne 13,71%<br>(w zł)</th>
-                <th>Koszty uzyskania przychodu<br>(w zł)</th>
-                <th>Podstawa opodatkowania</th>
+                <th style="min-width: 120px; max-width: 120px;">Miesiąc</th>
+                <th style="max-width: 263px; min-width: 263px;">Przychód ogółem<br>(w zł)</th>
+                <th style="min-width: 200px; max-width: 200px;">Przychód ogółem narastająco<br>(w zł)</th>
+                <th style="min-width: 200px; max-width: 200px;">Składki na ubezpieczenia społeczne 13,71%<br>(w zł)</th>
+                <th style="min-width: 100px; max-width: 100px;">Koszty uzyskania przychodu<br>(w zł)</th>
+                <th style="min-width: 200px; max-width: 200px;">Podstawa opodatkowania</th>
             </tr>
         </table>
-        <table class="table">
+        <table class="table" style="max-width: 1085px; min-width: 1085px;">
             <tr>
-                <th>Podstawa opodatkowania narastająco od początku roku<br>(w zł)</th>
-                <th>Stawka podatku dochodowego<br>(w %)</th>
-                <th>Podatek dochodowy<br>(w zł)</th>
-                <th>Kwota zmniejszająca podatek<br>(w zł)</th>
-                <th>Należna zaliczka na podatek dochodowy<br>(w zł)</th>
+                <th style="min-width: 223px; max-width: 223px;">Podstawa opodatkowania narastająco od początku roku<br>(w zł)</th>
+                <th style="min-width: 160px; max-width: 160px;">Stawka podatku dochodowego<br>(w %)</th>
+                <th style="min-width: 273px; max-width: 273px;">Podatek dochodowy<br>(w zł)</th>
+                <th style="min-width: 160px; max-width: 160px;">Kwota zmniejszająca podatek<br>(w zł)</th>
+                <th style="min-width: 283.80px; max-width: 283.80px;">Należna zaliczka na podatek dochodowy<br>(w zł)</th>
             </tr>
         </table>
     </div>
@@ -86,12 +104,19 @@
         border: none;" value="Result" onclick="resultFunc()">
 </body>
 <script>
+    function sizeTables() {
+        if (window.screen.width > 1100)
+            document.body.getElementsByTagName("div")[1].id = "bodyComputer"
+        else
+            document.body.getElementsByTagName("div")[1].id = "bodyTables";
+    }
+
     function addRow() {
         try {
             let tables = document.getElementsByClassName("table");
             tables[0].innerHTML += 
             `<tr class="t1r">
-                <td style="min-width: 120px; max-width: 120px;">
+                <td>
                     <select style="width: 100%; font-size: 18px; cursor: pointer;">
                         <option>Styczeń</option>
                         <option>Luty</option>
@@ -107,21 +132,21 @@
                         <option>Grudzeiń</option>
                         </select>
                 </td>
-                <td style="width: 200px;">
+                <td>
                     <input type="text" class="inValue" style="font-size: 18px;">
                 </td>
-                <td style="width: 200px;"></td>
-                <td style="width: 200px;"></td>
-                <td style="width: 100px;"></td>
-                <td style="width: 200px;"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>`;
             tables[1].innerHTML += 
             `<tr class="t2r">
-                <td style="width: 273px;"></td>
-                <td style="width: 100px;"></td>
-                <td style="width: 273px;"></td>
-                <td style="width: 100px;"></td>
-                <td style="width: 273px;"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>`;
         }
         catch {
