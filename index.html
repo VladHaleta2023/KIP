@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KIP</title>
+</head>
+<style>
+    .table {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        user-select: none;
+        width: 1000px;
+    }
+
+    .table td, .table th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        word-wrap: break-word; 
+        text-align: center;
+    }
+
+    .table th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #04AA6D;
+        color: white;
+    }
+
+    .table tr:nth-child(even){background-color: #f2f2f2;}
+</style>
+<body>
+    <br>
+    <input type="button" style="margin-right: 12px; font-size: 18px; 
+        padding: 6px 18px; 
+        cursor: pointer; 
+        background-color: #7bfece; 
+        border: none;" value="Add Row" onclick="addRow()">
+    <input type="button" style="font-size: 18px; 
+    padding: 6px 18px; 
+    cursor: pointer; 
+    background-color: #fe847b; 
+    border: none;" value="Remove Row" onclick="removeRow()">
+    <br>
+    <br>
+    <div>
+        <select id="selKoszt" style="font-size: 18px; cursor: pointer; padding: 6px 12px; margin-right: 12px;">
+            <option>Podstawowe Koszty</option>
+            <option>Podwyższone Koszty</option>
+        </select>
+        <select id="selPIT2" style="font-size: 18px; cursor: pointer; padding: 6px 12px;">
+            <option>Złożył PIT2</option>
+            <option>Nie złożył PIT2</option>
+        </select>
+    </div>
+    <br>
+    <br>
+    <div style="font-size: 18px;">
+        <table class="table">
+            <tr>
+                <th>Miesiąc</th>
+                <th>Przychód ogółem<br>(w zł)</th>
+                <th>Przychód ogółem narastająco<br>(w zł)</th>
+                <th>Składki na ubezpieczenia społeczne 13,71%<br>(w zł)</th>
+                <th>Koszty uzyskania przychodu<br>(w zł)</th>
+                <th>Podstawa opodatkowania</th>
+            </tr>
+        </table>
+        <table class="table">
+            <tr>
+                <th>Podstawa opodatkowania narastająco od początku roku<br>(w zł)</th>
+                <th>Stawka podatku dochodowego<br>(w %)</th>
+                <th>Podatek dochodowy<br>(w zł)</th>
+                <th>Kwota zmniejszająca podatek<br>(w zł)</th>
+                <th>Należna zaliczka na podatek dochodowy<br>(w zł)</th>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <br>
+    <input type="button" style="font-size: 24px; 
+        padding: 6px 18px; 
+        cursor: pointer; 
+        background-color: #57c8e7; 
+        border: none;" value="Result" onclick="resultFunc()">
+</body>
+<script>
+    function addRow() {
+        try {
+            let tables = document.getElementsByClassName("table");
+            tables[0].innerHTML += 
+            `<tr class="t1r">
+                <td style="min-width: 120px; max-width: 120px;">
+                    <select style="width: 100%; font-size: 18px; cursor: pointer;">
+                        <option>Styczeń</option>
+                        <option>Luty</option>
+                        <option>Marzec</option>
+                        <option>Kwiecień</option>
+                        <option>Maj</option>
+                        <option>Czerwiec</option>
+                        <option>Lipiec</option>
+                        <option>Sierpień</option>
+                        <option>Wrzesień</option>
+                        <option>Pazdziernik</option>
+                        <option>Listopad</option>
+                        <option>Grudzeiń</option>
+                        </select>
+                </td>
+                <td style="width: 200px;">
+                    <input type="text" class="inValue" style="font-size: 18px;">
+                </td>
+                <td style="width: 200px;"></td>
+                <td style="width: 200px;"></td>
+                <td style="width: 100px;"></td>
+                <td style="width: 200px;"></td>
+            </tr>`;
+            tables[1].innerHTML += 
+            `<tr class="t2r">
+                <td style="width: 273px;"></td>
+                <td style="width: 100px;"></td>
+                <td style="width: 273px;"></td>
+                <td style="width: 100px;"></td>
+                <td style="width: 273px;"></td>
+            </tr>`;
+        }
+        catch {
+            return;
+        }
+    }
+
+    function removeRow() {
+        try {
+            let rowsT1 = document.getElementsByClassName("t1r");
+            let rowsT2 = document.getElementsByClassName("t2r");
+            rowsT1[rowsT1.length - 1].remove();
+            rowsT2[rowsT2.length - 1].remove();
+        }
+        catch {
+            return;
+        }
+    }
+
+    function resultFunc() {
+        let resTable = [];
+        let values = document.getElementsByClassName("inValue");
+        let buffer = [];
+        for (let i = 0; i < values.length; i++) {
+            try {
+                values[i].value = String(values[i].value).replace(",", ".");
+                buffer[i] = Math.round(parseFloat(values[i].value) * 100) / 100;
+            }
+            catch {
+                
+            }
+        }
+        resTable.push(buffer);
+        buffer = [];
+
+        let sum = 0;
+        for (let i = 0; i < resTable[0].length; i++) {
+            try {
+                sum += parseFloat(resTable[0][i]);
+                buffer.push(sum);
+            }
+            catch {
+
+            }
+        }   
+        resTable.push(buffer);
+        buffer = [];
+        sum = 0;
+
+        for (let i = 0; i < resTable[0].length; i++) {
+            try {
+                buffer.push(parseFloat(Math.round(parseFloat(resTable[0][i] * 0.1371) * 100) / 100));
+            }
+            catch {
+
+            }
+        }
+        resTable.push(buffer);
+        buffer = [];
+
+        let selKoszt = document.getElementById("selKoszt").value;
+        if (selKoszt == "Podstawowe Koszty")
+            selKoszt = 250;
+        else
+            selKoszt = 300;
+
+        for (let i = 0; i < resTable[0].length; i++) {
+            try {
+                buffer.push(selKoszt);
+            }
+            catch {
+
+            }
+        }
+        resTable.push(buffer);
+        buffer = [];
+
+        for (let i = 0; i < resTable[0].length; i++) {
+            try {
+                let res = Math.round(parseFloat(Math.round((parseFloat(resTable[0][i]) - parseFloat(resTable[2][i]) - parseFloat(resTable[3][i])) * 100) / 100));
+                if (res < 0)
+                    res = 0
+                buffer.push(res);
+            }
+            catch {
+
+            }
+        }
+        resTable.push(buffer);
+        buffer = [];
+
+        for (let i = 0; i < resTable[0].length; i++) {
+            try {
+                sum += parseInt(resTable[4][i]);
+                buffer.push(sum);
+            }
+            catch {
+
+            }
+        }   
+        resTable.push(buffer);
+        buffer = [];
+        sum = 0;
+
+        let twelve = true;
+        for (let i = 0; i < resTable[0].length; i++) {
+            if (resTable[5][i] < 120000) {
+                twelve = true;
+                buffer.push("12%");
+            }
+            if (resTable[5][i] > 1000000) {
+                buffer.push("4%");
+                continue;
+            }
+            if (resTable[5][i] > 120000 && twelve == true) {
+                twelve = false;
+                buffer.push("12%, 32%");
+                continue;
+            }
+            if (twelve == false) {
+                buffer.push("32%");
+            }
+        }
+        resTable.push(buffer);
+        buffer = [];
+
+        for (let i = 0; i < resTable[0].length; i++) {
+            if (resTable[6][i] == "12%")
+                buffer.push(Math.round(parseFloat(resTable[4][i]) * 0.12 * 100) / 100);
+            if (resTable[6][i] == "4%")
+                buffer.push(Math.round(parseFloat(resTable[4][i]) * 0.04 * 100) / 100);
+            if (resTable[6][i] == "12%, 32%") {
+                let res = 0;
+                let res32 = parseFloat(resTable[5][i]) - 120000;
+                res += Math.round(res32 * 0.32 * 100) / 100;
+                let res12 = parseFloat(resTable[4][i]) - res32;
+                res += Math.round(res12 * 0.12 * 100) / 100;
+                buffer.push(res);
+            }
+            if (resTable[6][i] == "32%")
+                buffer.push(Math.round(parseFloat(resTable[4][i]) * 0.32 * 100) / 100);
+        }
+        resTable.push(buffer);
+        buffer = [];
+
+        let selPIT2 = document.getElementById("selPIT2").value;
+        if (selPIT2 == "Złożył PIT2")
+            selPIT2 = 300;
+        else
+            selPIT2 = 0;
+
+        for (let i = 0; i < resTable[0].length; i++) {
+            try {
+                buffer.push(selPIT2);
+            }
+            catch {
+
+            }
+        }
+        resTable.push(buffer);
+        buffer = [];
+
+        for (let i = 0; i < resTable[0].length; i++) {
+            try {
+                let res = Math.round(resTable[7][i] - resTable[8][i]);
+                if (res < 0)
+                    res = 0;
+                buffer.push(res);
+            }
+            catch {
+
+            }
+        }
+        resTable.push(buffer);
+        buffer = [];
+
+        console.log(resTable);
+        for (let i = 0; i < resTable[0].length; i++) {
+            document.getElementsByClassName("t1r")[i].getElementsByTagName('td')[2].innerHTML = resTable[1][i];
+            document.getElementsByClassName("t1r")[i].getElementsByTagName('td')[3].innerHTML = resTable[2][i];
+            document.getElementsByClassName("t1r")[i].getElementsByTagName('td')[4].innerHTML = resTable[3][i];
+            document.getElementsByClassName("t1r")[i].getElementsByTagName('td')[5].innerHTML = resTable[4][i];
+            document.getElementsByClassName("t2r")[i].getElementsByTagName('td')[0].innerHTML = resTable[5][i];
+            document.getElementsByClassName("t2r")[i].getElementsByTagName('td')[1].innerHTML = resTable[6][i];
+            document.getElementsByClassName("t2r")[i].getElementsByTagName('td')[2].innerHTML = resTable[7][i];
+            document.getElementsByClassName("t2r")[i].getElementsByTagName('td')[3].innerHTML = resTable[8][i];
+            document.getElementsByClassName("t2r")[i].getElementsByTagName('td')[4].innerHTML = resTable[9][i];
+        }
+    }
+</script>
+</html>
