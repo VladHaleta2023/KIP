@@ -7,13 +7,20 @@
 </head>
 <style>
     div#bodyTables {
-        width: 265px; 
+        width: 400px; 
         overflow-x: scroll;
         -ms-overflow-style: none;  /* IE и Edge */
         scrollbar-width: none;  /* Firefox */
     }
 
-    div#bodyTables::-webkit-scrollbar {
+    div#bodyIphone {
+        width: 225px; 
+        overflow-x: scroll;
+        -ms-overflow-style: none;  /* IE и Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+
+    div#bodyTables::-webkit-scrollbar, div#bodyIphone::-webkit-scrollbar {
         display: none;
     }
 
@@ -107,6 +114,8 @@
     function sizeTables() {
         if (window.screen.width > 1100)
             document.body.getElementsByTagName("div")[1].id = "bodyComputer"
+        else if (window.screen.width < 400)
+            document.body.getElementsByTagName("div")[1].id = "bodyIphone"
         else
             document.body.getElementsByTagName("div")[1].id = "bodyTables";
     }
